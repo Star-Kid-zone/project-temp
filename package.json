@@ -29,6 +29,7 @@
     "dependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
+        "@lglab/react-qr-code": "^1.4.5",
         "@mui/icons-material": "^6.4.6",
         "@mui/material": "^6.4.6",
         "@radix-ui/react-dropdown-menu": "^2.1.6",

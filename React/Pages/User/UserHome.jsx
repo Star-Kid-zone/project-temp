@@ -16,6 +16,8 @@ import {
   FiMinus,
 } from "react-icons/fi"
 import { FaQrcode, FaStar, FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa"
+import { Link } from "react-router-dom";
+
 
 export default function QRCodeMenuLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -57,14 +59,18 @@ export default function QRCodeMenuLanding() {
             </a>
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
-            <button className="h-9 px-4 py-2 rounded-md border border-gray-200 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
-              Login
-            </button>
-            <button className="h-9 px-4 py-2 rounded-md bg-green-600 text-white text-sm font-medium shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
-              Register
-            </button>
-          </div>
+<div className="hidden md:flex items-center gap-4">
+  <Link to="/login">
+    <button className="h-9 px-4 py-2 rounded-md border border-gray-200 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
+      Login
+    </button>
+  </Link>
+  <Link to="/register">
+    <button className="h-9 px-4 py-2 rounded-md bg-green-600 text-white text-sm font-medium shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
+      Register
+    </button>
+  </Link>
+</div>
 
           {/* Mobile Menu Button */}
           <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>

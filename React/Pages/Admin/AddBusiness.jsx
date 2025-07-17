@@ -14,14 +14,12 @@ function AddBusiness() {
     phone: Yup.string()
       .matches(/^\d{10,15}$/, "Phone number must be 10-15 digits")
       .required("Phone number is required"),
-    social_media: Yup.array()
-      .of(
-        Yup.object().shape({
-          platform: Yup.string().required("Platform name is required"),
-          link: Yup.string().url("Enter a valid URL"),
-        })
-      ),
-    merchant_id: Yup.string().required("Merchant ID is required"),
+    social_media: Yup.array().of(
+      Yup.object().shape({
+        platform: Yup.string().required("Platform name is required"),
+        link: Yup.string().url("Enter a valid URL"),
+      })
+    ),
     active: Yup.boolean(),
   });
 
@@ -44,8 +42,7 @@ function AddBusiness() {
         business_name: values.business_name,
         phone: values.phone,
         social_media: formattedSocialMedia,
-        merchant_id: values.merchant_id,
-        active: values.active
+        active: values.active,
       };
 
       const response = await axios.post("http://127.0.0.1:8082/api/business", payload, {
@@ -62,8 +59,9 @@ function AddBusiness() {
         throw new Error("Failed to add business");
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 
-        err.response?.data?.error || 
+      const errorMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
         "Failed to add business. Please try again.";
       setError(errorMessage);
       console.error("Add business error:", err);
@@ -93,7 +91,6 @@ function AddBusiness() {
           business_name: "",
           phone: "",
           social_media: [],
-          merchant_id: "",
           active: true,
         }}
         validationSchema={validationSchema}
@@ -140,48 +137,50 @@ function AddBusiness() {
               <label className="block text-sm font-medium text-gray-700">
                 Social Media Links
               </label>
+
               {values.social_media.map((item, index) => (
-  <div key={index} className="flex flex-col md:flex-row gap-2 mt-2">
-    {/* Platform Name */}
-    <input
-      type="text"
-      value={item.platform}
-      onChange={(e) => {
-        const newSocialMedia = [...values.social_media];
-        newSocialMedia[index].platform = e.target.value;
-        setFieldValue("social_media", newSocialMedia);
-      }}
-      placeholder="Platform (e.g., Facebook)"
-      className="w-full md:w-1/3 p-2 border rounded-md outline-none focus:ring-2 focus:ring-green-400"
-    />
+                <div key={index} className="flex flex-col md:flex-row gap-2 mt-2">
+                  {/* Platform Name */}
+                  <input
+                    type="text"
+                    value={item.platform}
+                    onChange={(e) => {
+                      const newSocialMedia = [...values.social_media];
+                      newSocialMedia[index].platform = e.target.value;
+                      setFieldValue("social_media", newSocialMedia);
+                    }}
+                    placeholder="Platform (e.g., Facebook)"
+                    className="w-full md:w-1/3 p-2 border rounded-md outline-none focus:ring-2 focus:ring-green-400"
+                  />
 
-    {/* Link */}
-    <input
-      type="url"
-      value={item.link}
-      onChange={(e) => {
-        const newSocialMedia = [...values.social_media];
-        newSocialMedia[index].link = e.target.value;
-        setFieldValue("social_media", newSocialMedia);
-      }}
-      placeholder="Enter link"
-      className="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-green-400"
-    />
+                  {/* Link */}
+                  <input
+                    type="url"
+                    value={item.link}
+                    onChange={(e) => {
+                      const newSocialMedia = [...values.social_media];
+                      newSocialMedia[index].link = e.target.value;
+                      setFieldValue("social_media", newSocialMedia);
+                    }}
+                    placeholder="Enter link"
+                    className="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-green-400"
+                  />
 
-    {/* Remove Button */}
-    <button
-      type="button"
-      onClick={() => {
-        const newSocialMedia = values.social_media.filter((_, i) => i !== index);
-        setFieldValue("social_media", newSocialMedia);
-      }}
-      className="bg-red-500 text-white px-3 py-1 rounded-md"
-    >
-      ✕
-    </button>
-  </div>
-))}
-
+                  {/* Remove Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newSocialMedia = values.social_media.filter(
+                        (_, i) => i !== index
+                      );
+                      setFieldValue("social_media", newSocialMedia);
+                    }}
+                    className="bg-red-500 text-white px-3 py-1 rounded-md"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
 
               {/* Add Social Media Button */}
               <button
@@ -204,23 +203,6 @@ function AddBusiness() {
               />
             </div>
 
-            {/* Merchant ID */}
-            <div className="p-4 bg-white shadow rounded-lg">
-              <label className="block text-sm font-medium text-gray-700">
-                Merchant ID
-              </label>
-              <Field
-                type="text"
-                name="merchant_id"
-                className="w-full p-2 border rounded-md outline-none focus:ring-2 focus:ring-green-400"
-              />
-              <ErrorMessage
-                name="merchant_id"
-                component="p"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
             {/* Active Status Toggle */}
             <div className="p-4 bg-white shadow rounded-lg flex items-center justify-between">
               <label className="text-sm font-medium text-gray-700">Active</label>
@@ -228,7 +210,9 @@ function AddBusiness() {
                 type="button"
                 onClick={() => setFieldValue("active", !values.active)}
                 className={`px-4 py-2 rounded-md ${
-                  values.active ? "bg-green-500 text-white" : "bg-gray-300 text-gray-700"
+                  values.active
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-300 text-gray-700"
                 }`}
               >
                 {values.active ? "Active" : "Inactive"}

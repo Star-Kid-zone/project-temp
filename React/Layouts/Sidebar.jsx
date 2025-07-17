@@ -14,7 +14,6 @@ import {
 const Sidebar = ({ isOpen }) => {
   const location = useLocation();
   const [adminOpen, setAdminOpen] = useState(true);
-  const [authOpen, setAuthOpen] = useState(false);
 
   const StyledListItem = styled(ListItemButton)(({ theme, active }) => ({
     borderRadius: 8,
@@ -60,13 +59,16 @@ const Sidebar = ({ isOpen }) => {
           <List component="div" disablePadding>
             {[
               { path: '/admin/home', icon: <Person />, text: 'Admin Home' },
+              { path: '/admin/addqrcode', icon: <Person />, text: 'Add Qr Code' },
               { path: '/admin/listmenu', icon: <Restaurant />, text: 'Menu List' },
               { path: '/admin/addmenu', icon: <Add />, text: 'Add Menu' },
               { path: '/admin/listreview', icon: <List />, text: 'Reviews List' },
               { path: '/admin/addreview', icon: <Add />, text: 'Add Review' },
-              { path: '/admin/businesslist', icon: <BusinessCenter />, text: 'Business List' },
+              { path: '/admin/Listpayment', icon: <List />, text: 'Payment List' },
+              { path: '/admin/Addpayment', icon: <Add />, text: 'Add Payment' },
+              { path: '/admin/listbuisness', icon: <BusinessCenter />, text: 'Business List' },
               { path: '/admin/addbusiness', icon: <Add />, text: 'Add Business' },
-              { path: '/admin/listsettings', icon: <Settings />, text: 'Settings List' },
+              { path: '/admin/listsetting', icon: <Settings />, text: 'Settings List' },
               { path: '/admin/addsetting', icon: <Add />, text: 'Add Setting' },
             ].map((item) => (
               <StyledListItem 
@@ -85,35 +87,7 @@ const Sidebar = ({ isOpen }) => {
         
         <Divider sx={{ my: 1 }} />
 
-        <ListItemButton onClick={() => setAuthOpen(!authOpen)}>
-          <ListItemText primary={<Typography variant="subtitle2" color="textSecondary">AUTHENTICATION</Typography>} />
-          {authOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        
-        <Collapse in={authOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {[
-              { path: '/login', icon: <Login />, text: 'Login' },
-              { path: '/register', icon: <HowToReg />, text: 'Register' },
-              { path: '/forgotpassword', icon: <LockReset />, text: 'Forgot Password' },
-              { path: '/otp', icon: <Dialpad />, text: 'OTP' },
-              { path: '/resetpassword', icon: <LockReset />, text: 'Reset Password' },
-              { path: '/error404', icon: <Error />, text: 'Error 404' },
-              { path: '/admin/menulevel', icon: <MenuBook />, text: 'Menu Level' },
-            ].map((item) => (
-              <StyledListItem 
-                key={item.path}
-                component={Link}
-                to={item.path}
-                active={location.pathname === item.path}
-                sx={{ pl: 3 }}
-              >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </StyledListItem>
-            ))}
-          </List>
-        </Collapse>
+
       </List>
     </Box>
   );

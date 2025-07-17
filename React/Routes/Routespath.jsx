@@ -11,8 +11,11 @@ const SuperadminHome = React.lazy(
 const Listmenu = React.lazy(() => import("../Pages/Admin/Listmenu"));
 const Addmenu = React.lazy(() => import("../Pages/Admin/Addmenu"));
 
-const Listreview = React.lazy(() => import("../Pages/Admin/Listreview"));
-const Addreview = React.lazy(() => import("../Pages/Admin/Addreview"));
+const Listreview = React.lazy(() => import("../Pages/Admin/ListReview"));
+const Addreview = React.lazy(() => import("../Pages/Admin/AddReview"));
+
+const Listpayment = React.lazy(() => import("../Pages/Admin/ListPayment"));
+const Addpayment = React.lazy(() => import("../Pages/Admin/AddPayment"));
 
 const Listbuisness = React.lazy(() => import("../Pages/Admin/BusinessList"));
 const AddBusiness = React.lazy(() => import("../Pages/Admin/AddBusiness"));
@@ -26,6 +29,10 @@ const Error404 = React.lazy(() => import("../Pages/Auth/Error404"));
 const ForgetPassword = React.lazy(() => import("../Pages/Auth/ForgotPassword"));
 const Otp = React.lazy(() => import("../Pages/Auth/Otp"));
 const ResetPassword = React.lazy(() => import("../Pages/Auth/ResetPassword"));
+
+const Addqrcode = React.lazy(() => import("../Pages/Admin/Addqrcode"));
+
+const UserLanding = React.lazy(() => import("../Pages/User/UserLanding"));
 
 function Routespath() {
     return (
@@ -92,11 +99,20 @@ function Routespath() {
                     />
                     <Route element={<Layout />}>
                         <Route
-                            path="/admin"
+                            path="/admin/home"
                             element={
                                 <Routemiddleware
                                     Component={AdminHome}
                                     name="AdminHome"
+                                />
+                            }
+                        />
+                        <Route
+                            path="/admin/addqrcode"
+                            element={
+                                <Routemiddleware
+                                    Component={Addqrcode}
+                                    name="Addqrcode"
                                 />
                             }
                         />
@@ -137,6 +153,24 @@ function Routespath() {
                             }
                         />
                         <Route
+                            path="/admin/Listpayment"
+                            element={
+                                <Routemiddleware
+                                    Component={Listpayment}
+                                    name="Listpayment"
+                                />
+                            }
+                        />
+                        <Route
+                            path="/admin/Addpayment"
+                            element={
+                                <Routemiddleware
+                                    Component={Addpayment}
+                                    name="Addpayment"
+                                />
+                            }
+                        />
+                        <Route
                             path="/admin/listbuisness"
                             element={
                                 <Routemiddleware
@@ -164,7 +198,7 @@ function Routespath() {
                                 />
                             }
                         />
-                                                <Route
+                        <Route
                             path="/admin/listsetting"
                             element={
                                 <Routemiddleware
@@ -173,6 +207,7 @@ function Routespath() {
                                 />
                             }
                         />
+
                         <Route
                             path="/superadmin"
                             element={
@@ -183,6 +218,15 @@ function Routespath() {
                             }
                         />
                     </Route>
+                    <Route
+                        path="/user/userlanding"
+                        element={
+                            <Routemiddleware
+                                Component={UserLanding}
+                                name="UserLanding"
+                            />
+                        }
+                    />
                 </Routes>
             </React.Suspense>
         </Router>

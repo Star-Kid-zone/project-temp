@@ -18,24 +18,24 @@ import {
     DropdownMenuLabel,
     DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
-import EditReviewModal from "./Editreview";
-import DeleteReviewModal from "./Deletereview";
-import { QRCodeCanvas } from "qrcode.react"; // Import QR Code component
+import { QRCodeCanvas } from "qrcode.react";
+import EditPaymentModal from "./EditPaymentModal";
+import DeletePaymentModal from "./DeletePaymentModal";
 
-function ListReview() {
-    const [reviews, setReviews] = useState([]);
+function ListPayment() {
+    const [payments, setPayments] = useState([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [editModalOpen, setEditModalOpen] = useState(false);
-    const [selectedReview, setSelectedReview] = useState(null);
+    const [selectedPayment, setSelectedPayment] = useState(null);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [deleteReviewId, setDeleteReviewId] = useState(null);
+    const [deletePaymentId, setDeletePaymentId] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchReviews();
+        fetchPayments();
     }, []);
 
-    const fetchReviews = async () => {
+    const fetchPayments = async () => {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
@@ -44,38 +44,38 @@ function ListReview() {
             }
 
             const response = await axios.get(
-                "http://127.0.0.1:8082/api/reviews/user",
+                "http://127.0.0.1:8082/api/payments/user",
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-            setReviews(response.data.data);
+            setPayments(response.data.data);
         } catch (error) {
             console.error(
-                "Error fetching reviews:",
+                "Error fetching payments:",
                 error.response?.data || error.message
             );
         }
     };
 
-    const openEditModal = (review) => {
-        setSelectedReview(review);
+    const openEditModal = (payment) => {
+        setSelectedPayment(payment);
         setEditModalOpen(true);
     };
 
     const closeEditModal = () => {
         setEditModalOpen(false);
-        setSelectedReview(null);
+        setSelectedPayment(null);
     };
 
-    const openDeleteModal = (reviewId) => {
-        setDeleteReviewId(reviewId);
+    const openDeleteModal = (paymentId) => {
+        setDeletePaymentId(paymentId);
         setDeleteModalOpen(true);
     };
 
     const closeDeleteModal = () => {
         setDeleteModalOpen(false);
-        setDeleteReviewId(null);
+        setDeletePaymentId(null);
     };
 
     const columns = [
@@ -90,33 +90,32 @@ function ListReview() {
             cell: ({ row }) => <div>{row.original.user?.name || "N/A"}</div>,
         },
         {
-            accessorKey: "review_link",
-            header: "Review Link",
+            accessorKey: "payment_link",
+            header: "Payment Link",
             cell: ({ row }) => {
-                const link = row.original.review_link;
+                const link = row.original.payment_link;
                 const displayText =
                     link.length > 20 ? `${link.substring(0, 20)}...` : link;
-        
+
                 return (
                     <a
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-green-600 underline"
-                        title={link} // Shows full link on hover
+                        title={link}
                     >
                         {displayText}
                     </a>
                 );
             },
         },
-        
         {
             accessorKey: "qr_code",
             header: "QR Code",
             cell: ({ row }) =>
-                row.original.review_link ? (
-                    <QRCodeCanvas value={row.original.review_link} size={50} />
+                row.original.payment_link ? (
+                    <QRCodeCanvas value={row.original.payment_link} size={50} />
                 ) : (
                     <span>N/A</span>
                 ),
@@ -145,7 +144,6 @@ function ListReview() {
                             <RiDeleteBin6Line className="size-5 text-red-500" />
                             Delete
                         </DropdownMenuItem>
-    
                         <DropdownMenuItem
                             className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer"
                             onClick={() => openEditModal(row.original)}
@@ -161,7 +159,7 @@ function ListReview() {
 
     const table = useReactTable({
         state: { globalFilter },
-        data: reviews,
+        data: payments,
         columns,
         initialState: { pagination: { pageSize: 5 } },
         getCoreRowModel: getCoreRowModel(),
@@ -172,22 +170,22 @@ function ListReview() {
 
     return (
         <div className="p-4 my-6">
-            <h1 className="font-semibold text-2xl text-green-700">Reviews</h1>
+            <h1 className="font-semibold text-2xl text-green-700">Payments</h1>
 
-            {/* Search & Add Review */}
+            {/* Search & Add Payment */}
             <div className="mt-4 flex items-center justify-between">
                 <input
                     value={globalFilter ?? ""}
                     onChange={(e) => setGlobalFilter(e.target.value)}
                     type="search"
-                    placeholder="Search reviews"
+                    placeholder="Search payments"
                     className="p-2 border w-full md:w-96 border-gray-300 rounded-lg outline-none"
                 />
                 <button
                     className="bg-green-600 text-white p-2 rounded-lg"
-                    onClick={() => navigate("/admin/addreview")}
+                    onClick={() => navigate("/admin/addpayment")}
                 >
-                    Add Review
+                    Add Payment
                 </button>
             </div>
 
@@ -233,24 +231,24 @@ function ListReview() {
 
             {/* Modals */}
             {deleteModalOpen && (
-                <DeleteReviewModal
+                <DeletePaymentModal
                     isOpen={deleteModalOpen}
                     onClose={closeDeleteModal}
-                    reviewId={deleteReviewId}
-                    onDelete={fetchReviews}
+                    paymentId={deletePaymentId}
+                    onDelete={fetchPayments}
                 />
             )}
 
             {editModalOpen && (
-                <EditReviewModal
+                <EditPaymentModal
                     isOpen={editModalOpen}
                     onClose={closeEditModal}
-                    review={selectedReview}
-                    onUpdate={fetchReviews}
+                    payment={selectedPayment}
+                    onUpdate={fetchPayments}
                 />
             )}
         </div>
     );
 }
 
-export default ListReview;
+export default ListPayment;

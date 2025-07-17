@@ -15,7 +15,7 @@ class Business extends Model
         'business_name',
         'phone',
         'social_media',
-        'merchant_id',
+        // 'merchant_id',
         'user_id',
         'active',
     ];

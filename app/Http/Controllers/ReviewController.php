@@ -58,7 +58,6 @@ class ReviewController extends Controller
         try {
             $validatedData = $request->validate([
                 'review_link' => 'required|url',
-                'business_id' => 'required|exists:business,id',
             ]);
 
             $validatedData['user_id'] = $request->user()->id;

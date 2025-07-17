@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Business;
@@ -59,7 +60,6 @@ class BusinessController extends Controller
                 'business_name' => 'required|string',
                 'phone' => 'required|string',
                 'social_media' => 'required|array',
-                'merchant_id' => 'required|string|unique:business',
                 'active' => 'boolean',
             ]);
 
@@ -110,7 +110,6 @@ class BusinessController extends Controller
                 'business_name' => 'sometimes|string',
                 'phone' => 'sometimes|string',
                 'social_media' => 'sometimes|array',
-                'merchant_id' => 'sometimes|string|unique:business,merchant_id,' . $business->id,
                 'active' => 'sometimes|boolean',
             ]);
 

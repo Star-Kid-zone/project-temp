@@ -7,7 +7,7 @@ sudo apt install php8.3-mbstring
 
 copy .env.example to .env
 
-npm run dev
+npm run dev  
 
 
 php artisan migrate

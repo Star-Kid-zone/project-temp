@@ -32,4 +32,10 @@ class Review extends Model
     {
         return filter_var($value, FILTER_VALIDATE_URL) ? $value : null;
     }
+
+    // Optional: You can use a mutator to ensure link is always stored cleanly
+    public function setReviewLinkAttribute($value)
+    {
+        $this->attributes['review_link'] = trim($value);
+    }
 }
