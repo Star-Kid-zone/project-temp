@@ -40,7 +40,7 @@ export default function Login() {
 
       // Role-based navigation
       if (user.role === "admin") {
-        navigate("/admin");
+        navigate("/admin/home");
       } else if (user.role === "superadmin") {
         navigate("/superadmin");
       } else {

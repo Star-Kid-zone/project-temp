@@ -75,3 +75,6 @@ Route::middleware('adminauth')->group(function () {
     Route::put('/settings/{id}', [SettingController::class, 'update']); // Update a setting by ID
     Route::delete('/settings/{id}', [SettingController::class, 'destroy']); // Delete a setting by ID
 });
+
+    Route::get('/settings/user/{id}', [SettingController::class, 'userdetails']); // Get authenticated user's details
+    Route::get('/menu/user/{id}', [MenuController::class, 'Listusermenu']); // Get authenticated user's details

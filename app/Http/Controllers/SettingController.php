@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-
+use App\Models\Business;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -137,4 +137,24 @@ class SettingController extends Controller
             return $this->errorResponse("Deleting setting failed", $e->getMessage());
         }
     }
+
+    public function userdetails($id)
+{
+    try {
+        // Retrieve settings using the user_id passed in the function parameter
+        $settings = Setting::where('user_id', $id)->first();
+
+
+
+        // Get the business associated with the user
+        $business = Business::where('user_id', $id)->first();
+
+        return $this->successResponse([
+            'settings' => $settings,
+            'business' => $business
+        ], "User's settings and business data retrieved successfully");
+    } catch (Exception $e) {
+        return $this->errorResponse("Failed to retrieve user's settings", $e->getMessage());
+    }
+}
 }

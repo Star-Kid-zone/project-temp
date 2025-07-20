@@ -23,7 +23,7 @@ const dataModuleStyles = ['square', 'circle', 'leaf', 'vertical-line', 'box', 'p
 const AddQRCode = () => {
   const ref = useRef(null);
 
-  const [qrValue, setQrValue] = useState('https://example.com');
+  const [qrValue, setQrValue] = useState('http://127.0.0.1:8082/user/userlanding/4');
   const [size, setSize] = useState(256);
   const [margin, setMargin] = useState(4);
   const [fgColor, setFgColor] = useState('#000000');

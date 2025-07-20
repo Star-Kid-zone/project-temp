@@ -139,4 +139,19 @@ class MenuController extends Controller
             return $this->errorResponse("Deleting menu failed", $e->getMessage());
         }
     }
+
+    //7) . list menu
+public function Listusermenu(Request $request, $id)
+{
+    try {        
+
+        // Get all menu items created by the user
+        $menus = Menu::where('user_id', $id)->get();
+
+        return $this->successResponse($menus, "Menu items fetched successfully");
+    } catch (Exception $e) {
+        return $this->errorResponse("Fetching menu failed", $e->getMessage());
+    }
+}
+
 }

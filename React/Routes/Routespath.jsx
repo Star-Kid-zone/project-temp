@@ -34,6 +34,8 @@ const Addqrcode = React.lazy(() => import("../Pages/Admin/Addqrcode"));
 
 const UserLanding = React.lazy(() => import("../Pages/User/UserLanding"));
 
+const UserMenu = React.lazy(() => import("../Pages/User/UserMenu"));
+
 function Routespath() {
     return (
         <Router>
@@ -219,7 +221,7 @@ function Routespath() {
                         />
                     </Route>
                     <Route
-                        path="/user/userlanding"
+                        path="/user/userlanding/:id"
                         element={
                             <Routemiddleware
                                 Component={UserLanding}
@@ -227,7 +229,18 @@ function Routespath() {
                             />
                         }
                     />
+                                    <Route
+                        path="/user/usermenu/:id"
+                        element={
+                            <Routemiddleware
+                                Component={UserMenu}
+                                name="UserMenu"
+                            />
+                        }
+                    />
                 </Routes>
+
+                
             </React.Suspense>
         </Router>
     );
