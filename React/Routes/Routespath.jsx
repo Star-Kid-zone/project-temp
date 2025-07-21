@@ -23,6 +23,8 @@ const AddBusiness = React.lazy(() => import("../Pages/Admin/AddBusiness"));
 const ListSettings = React.lazy(() => import("../Pages/Admin/ListSettings"));
 const Addsetting = React.lazy(() => import("../Pages/Admin/AddSetting"));
 
+const TextEditorCanvas = React.lazy(()=>import ("../Pages/Admin/TextEditorCanvas"))
+
 const Register = React.lazy(() => import("../Pages/Auth/Register"));
 const Login = React.lazy(() => import("../Pages/Auth/Login"));
 const Error404 = React.lazy(() => import("../Pages/Auth/Error404"));
@@ -118,6 +120,16 @@ function Routespath() {
                                 />
                             }
                         />
+                                                <Route
+                            path="/admin/TextEditorCanvas"
+                            element={
+                                <Routemiddleware
+                                    Component={TextEditorCanvas}
+                                    name="TextEditorCanvas"
+                                />
+                            }
+                        />
+                        
                         <Route
                             path="/admin/listmenu"
                             element={

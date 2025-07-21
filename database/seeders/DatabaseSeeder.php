@@ -45,7 +45,6 @@ class DatabaseSeeder extends Seeder
                 ['platform' => 'Facebook', 'url' => 'https://facebook.com/admin'],
                 ['platform' => 'Twitter', 'url' => 'https://twitter.com/admin'],
             ],
-            'merchant_id' => 'merchant_admin',
             'user_id' => $admin->id,
             'active' => true,
         ]);
@@ -57,23 +56,48 @@ class DatabaseSeeder extends Seeder
                 ['platform' => 'Facebook', 'url' => 'https://facebook.com/superadmin'],
                 ['platform' => 'Twitter', 'url' => 'https://twitter.com/superadmin'],
             ],
-            'merchant_id' => 'merchant_superadmin',
             'user_id' => $superadmin->id,
             'active' => true,
         ]);
 
-        // Create Dummy Menu Data
-        Menu::create([
-            'item' => 'Cheeseburger',
-            'price' => 9.99,
-            'description' => 'A delicious cheeseburger with cheddar cheese.',
-            'availability' => true,
-            'category' => 'Burgers',
-            'type' => 'Non-Veg',
-            'user_id' => $admin->id,
-            'popular' => true,
-        ]);
+        // Seed 20 Menu Items for Admin
+        $menuItems = [
+            ['Cheeseburger', 9.99, 'A delicious cheeseburger with cheddar cheese.', 'Burgers', 'Non-Veg', true],
+            ['Veggie Burger', 8.49, 'A tasty vegetarian burger.', 'Burgers', 'Veg', false],
+            ['Chicken Wrap', 7.99, 'Grilled chicken in a tortilla wrap.', 'Wraps', 'Non-Veg', true],
+            ['Paneer Wrap', 7.49, 'Paneer tikka in a wrap.', 'Wraps', 'Veg', false],
+            ['French Fries', 3.99, 'Crispy golden fries.', 'Sides', 'Veg', true],
+            ['Chicken Nuggets', 5.49, 'Crunchy chicken nuggets.', 'Sides', 'Non-Veg', true],
+            ['Veg Salad', 4.99, 'Fresh green salad.', 'Salads', 'Veg', false],
+            ['Chicken Salad', 6.99, 'Salad with grilled chicken.', 'Salads', 'Non-Veg', false],
+            ['Margarita Pizza', 10.49, 'Classic cheese pizza.', 'Pizza', 'Veg', true],
+            ['Pepperoni Pizza', 12.99, 'Pepperoni and cheese.', 'Pizza', 'Non-Veg', true],
+            ['Fish & Chips', 11.99, 'Fried fish and fries.', 'Mains', 'Non-Veg', false],
+            ['Alfredo Pasta', 9.99, 'Creamy Alfredo pasta.', 'Pastas', 'Veg', true],
+            ['Chicken Pasta', 10.99, 'Grilled chicken pasta.', 'Pastas', 'Non-Veg', true],
+            ['Chocolate Shake', 4.49, 'Thick chocolate shake.', 'Beverages', 'Veg', true],
+            ['Strawberry Smoothie', 4.99, 'Fresh strawberry smoothie.', 'Beverages', 'Veg', false],
+            ['Iced Coffee', 3.99, 'Cold iced coffee.', 'Beverages', 'Veg', false],
+            ['Tandoori Chicken', 13.99, 'Spicy tandoori chicken.', 'Grill', 'Non-Veg', true],
+            ['Falafel Wrap', 6.99, 'Falafel with hummus.', 'Wraps', 'Veg', false],
+            ['Egg Sandwich', 5.49, 'Boiled egg sandwich.', 'Sandwiches', 'Non-Veg', false],
+            ['Veg Sandwich', 5.29, 'Grilled veg sandwich.', 'Sandwiches', 'Veg', true],
+        ];
 
+        foreach ($menuItems as $item) {
+            Menu::create([
+                'item' => $item[0],
+                'price' => $item[1],
+                'description' => $item[2],
+                'category' => $item[3],
+                'type' => $item[4],
+                'availability' => true,
+                'popular' => $item[5],
+                'user_id' => $admin->id,
+            ]);
+        }
+
+        // Create Dummy Menu for Superadmin
         Menu::create([
             'item' => 'Veg Pizza',
             'price' => 12.99,
@@ -128,6 +152,6 @@ class DatabaseSeeder extends Seeder
             'menu_theme' => 2,
         ]);
 
-        $this->command->info('Database seeded successfully!');
+        $this->command->info('Database seeded successfully with 20 menu items!');
     }
 }
