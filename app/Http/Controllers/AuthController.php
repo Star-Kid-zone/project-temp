@@ -11,7 +11,6 @@ use Exception;
 
 class AuthController extends Controller
 {
-    // Standardized success response
     private function successResponse($data, $message)
     {
         return response()->json([
@@ -21,7 +20,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Standardized error response
     private function errorResponse($message, $data = null, $statusCode = 400)
     {
         return response()->json([
@@ -38,6 +36,8 @@ class AuthController extends Controller
             $validatedData = $request->validate([
                 'user_id' => 'required|string|unique:users',
                 'password' => 'required|string|min:6',
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'nullable|string|max:255',
                 'role' => 'required|in:admin,superadmin',
                 'active' => 'boolean',
                 'paid_date' => 'nullable|date',
@@ -46,6 +46,8 @@ class AuthController extends Controller
             ]);
 
             $validatedData['password'] = Hash::make($validatedData['password']);
+            $validatedData['otp'] = '123456';
+            $validatedData['active'] = false;
 
             $user = User::create($validatedData);
             $token = JWTAuth::fromUser($user);
@@ -76,22 +78,65 @@ class AuthController extends Controller
 
             $user = JWTAuth::user();
 
+            // Generate new 6-digit OTP if user not yet verified
+            if (!$user->active) {
+                $user->otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+                $user->save();
+            }
+
             return $this->successResponse([
                 'token' => $token,
+                'otp_sent' => !$user->active,
+                'active' => $user->active,
                 'user' => [
                     'id' => $user->id,
                     'user_id' => $user->user_id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
                     'role' => $user->role,
                     'active' => $user->active,
                     'paid_date' => $user->paid_date,
                     'plan' => $user->plan,
                     'expiry_date' => $user->expiry_date,
                 ],
-            ], "Login successful");
+            ], "Login " . ($user->active ? "successful" : "OTP required"));
         } catch (ValidationException $e) {
             return $this->errorResponse("Validation failed", $e->errors(), 422);
         } catch (Exception $e) {
             return $this->errorResponse("Login failed", $e->getMessage());
+        }
+    }
+
+    // Verify OTP
+    public function verifyOtp(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'user_id' => 'required|string',
+                'otp' => 'required|digits:6',
+            ]);
+
+            $user = User::where('id', $validated['user_id'])->first();
+
+            if (!$user) {
+                return $this->errorResponse("User not found", null, 404);
+            }
+            if ($user->otp !== $validated['otp']) {
+                return $this->errorResponse("Invalid OTP", null, 401);
+            }
+
+            $user->active = true;
+        $user->otp = '';
+            $user->save();
+
+            return $this->successResponse([
+                'user_id' => $user->user_id,
+                'active' => $user->active,
+            ], "OTP verified successfully. User is now active.");
+        } catch (ValidationException $e) {
+            return $this->errorResponse("Validation failed", $e->errors(), 422);
+        } catch (Exception $e) {
+            return $this->errorResponse("OTP verification failed", $e->getMessage());
         }
     }
 }

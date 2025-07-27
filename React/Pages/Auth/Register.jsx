@@ -21,7 +21,6 @@ const RegisterPage = () => {
     firstName: "",
     lastName: "",
     email: "",
-    user_id: "",
     password: "",
     confirmPassword: "",
   });
@@ -31,46 +30,79 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleRegister = async () => {
-    if (!agreed) return alert("Please agree to the Terms and Privacy Policy.");
-    if (formData.password !== formData.confirmPassword)
+    // 1. Terms checkbox
+    if (!agreed) {
+      return alert("Please agree to the Terms and Privacy Policy.");
+    }
+    // 2. first name validation
+    if (!formData.firstName.trim()) {
+      return alert("First name is required.");
+    }
+    // 3. password match
+    if (formData.password !== formData.confirmPassword) {
       return alert("Passwords do not match.");
+    }
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8082/api/register", {
-        user_id: formData.user_id || formData.email,
+      const payload = {
+        user_id: formData.email,       // use email as user_id
         password: formData.password,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
         role: "admin",
-      });
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:8082/api/register",
+        payload
+      );
 
       alert("Registration successful!");
-      console.log("Response:", response.data);
-    } catch (error) {
-      alert("Registration failed!");
-      console.error("Error:", error);
+      console.log("Response:", data);
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Registration failed!";
+      alert(msg);
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Container maxWidth="lg" sx={{ minHeight: "100vh", display: "flex", alignItems: "center" }}>
+    <Container
+      maxWidth="lg"
+      sx={{ minHeight: "100vh", display: "flex", alignItems: "center" }}
+    >
       <Grid container spacing={4} alignItems="center">
-        {/* Left Illustration */}
+        {/* Illustration */}
         <Grid item xs={12} md={6}>
           <Box display="flex" justifyContent="center">
-            <img src="/placeholder.svg" alt="Register illustration" width={400} height={400} />
+            <img
+              src="/placeholder.svg"
+              alt="Register illustration"
+              width={400}
+              height={400}
+            />
           </Box>
         </Grid>
 
-        {/* Right Form */}
+        {/* Form */}
         <Grid item xs={12} md={6}>
           <Box maxWidth={400} mx="auto">
-            <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ color: "#1f2937" }}>
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "#1f2937" }}
+            >
               Create an Account
             </Typography>
             <Typography sx={{ color: "#6b7280", mb: 3 }}>
@@ -81,8 +113,9 @@ const RegisterPage = () => {
               <Grid item xs={6}>
                 <TextField
                   name="firstName"
-                  label="First Name"
+                  label="First Name *"
                   fullWidth
+                  required
                   value={formData.firstName}
                   onChange={handleChange}
                 />
@@ -100,25 +133,30 @@ const RegisterPage = () => {
 
             <TextField
               name="email"
-              label="Email"
+              label="Email *"
               fullWidth
               margin="normal"
+              required
               value={formData.email}
               onChange={handleChange}
             />
 
             <TextField
               name="password"
-              label="Password"
+              label="Password *"
               fullWidth
               type={showPassword ? "text" : "password"}
               margin="normal"
+              required
               value={formData.password}
               onChange={handleChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    <IconButton
+                      onClick={() => setShowPassword(v => !v)}
+                      edge="end"
+                    >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
@@ -128,17 +166,25 @@ const RegisterPage = () => {
 
             <TextField
               name="confirmPassword"
-              label="Confirm Password"
+              label="Confirm Password *"
               fullWidth
               type={showConfirmPassword ? "text" : "password"}
               margin="normal"
+              required
               value={formData.confirmPassword}
               onChange={handleChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    <IconButton
+                      onClick={() => setShowConfirmPassword(v => !v)}
+                      edge="end"
+                    >
+                      {showConfirmPassword ? (
+                        <VisibilityOff />
+                      ) : (
+                        <Visibility />
+                      )}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -149,7 +195,7 @@ const RegisterPage = () => {
               control={
                 <Checkbox
                   checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
+                  onChange={e => setAgreed(e.target.checked)}
                   sx={{
                     color: "#22c55e",
                     "&.Mui-checked": { color: "#22c55e" },
@@ -159,11 +205,19 @@ const RegisterPage = () => {
               label={
                 <Typography variant="body2">
                   I agree to the{" "}
-                  <MuiLink component={Link} to="#" sx={{ color: "#22c55e", "&:hover": { color: "#16a34a" } }}>
+                  <MuiLink
+                    component={Link}
+                    to="#"
+                    sx={{ color: "#22c55e", "&:hover": { color: "#16a34a" } }}
+                  >
                     Terms of Service
                   </MuiLink>{" "}
                   and{" "}
-                  <MuiLink component={Link} to="#" sx={{ color: "#22c55e", "&:hover": { color: "#16a34a" } }}>
+                  <MuiLink
+                    component={Link}
+                    to="#"
+                    sx={{ color: "#22c55e", "&:hover": { color: "#16a34a" } }}
+                  >
                     Privacy Policy
                   </MuiLink>
                 </Typography>
@@ -188,7 +242,11 @@ const RegisterPage = () => {
 
             <Typography variant="body2" align="center" mt={2}>
               Already have an account?{" "}
-              <MuiLink component={Link} to="/login" sx={{ color: "#22c55e", "&:hover": { color: "#16a34a" } }}>
+              <MuiLink
+                component={Link}
+                to="/login"
+                sx={{ color: "#22c55e", "&:hover": { color: "#16a34a" } }}
+              >
                 Sign In
               </MuiLink>
             </Typography>

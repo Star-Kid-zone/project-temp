@@ -34,7 +34,14 @@ export default function Login() {
       console.log("Login successful:", response.data);
       alert("Login successful!");
 
-      const { token, user } = response.data.data;
+
+
+      const { token, user ,active } = response.data.data;
+            if (!active) {
+        // Not yet verified → go to OTP page
+        navigate("/otp", { state: { user_id: response.data.data.user.id } });
+      } else {
+        // Already active → go to your home/dashboard
       localStorage.setItem("token", token);
       localStorage.setItem("user", user.role);
 
@@ -45,7 +52,8 @@ export default function Login() {
         navigate("/superadmin");
       } else {
         navigate("/dashboard"); // Default route
-      }
+      }      }
+
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
       setError(err.response?.data?.error || "Login failed. Please try again.");

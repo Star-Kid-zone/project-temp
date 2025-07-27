@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
@@ -15,6 +14,9 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'user_id',
         'password',
+        'first_name',
+        'last_name',
+        'otp',
         'role',
         'active',
         'paid_date',
@@ -24,6 +26,7 @@ class User extends Authenticatable implements JWTSubject
 
     protected $hidden = [
         'password',
+        'otp',
     ];
 
     protected $casts = [
@@ -32,22 +35,16 @@ class User extends Authenticatable implements JWTSubject
         'expiry_date' => 'date',
     ];
 
-    /**
-     * Get the identifier that will be stored in the JWT subject claim.
-     */
     public function getJWTIdentifier()
     {
         return $this->getKey(); 
     }
 
-    /**
-     * Return a key-value array containing custom claims to be added to the JWT.
-     */
     public function getJWTCustomClaims()
     {
         return [
-            'user_id' => $this->user_id, // Add user_id to the JWT token
-            'id' => $this->id, // Add id to the JWT token
+            'user_id' => $this->user_id,
+            'id' => $this->id,
         ];
     }
 }

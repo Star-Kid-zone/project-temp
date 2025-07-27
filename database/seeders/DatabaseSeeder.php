@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
         $admin = User::create([
             'user_id' => 'admin123',
             'password' => Hash::make('adminpassword'),
+                'first_name' => 'Admin', // required
+    'last_name' => 'User', // optional
             'role' => 'admin',
             'active' => true,
             'paid_date' => now(),
@@ -30,6 +32,8 @@ class DatabaseSeeder extends Seeder
         $superadmin = User::create([
             'user_id' => 'superadmin123',
             'password' => Hash::make('superadminpassword'),
+                'first_name' => 'Admin', // required
+    'last_name' => 'User', // optional
             'role' => 'superadmin',
             'active' => true,
             'paid_date' => now(),

@@ -8,15 +8,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); // Auto-incrementing ID
-            $table->string('user_id')->unique(); // User ID as a string
-            $table->string('password'); // Password field
-            $table->enum('role', ['admin', 'superadmin'])->default('admin'); // Role field
-            $table->boolean('active')->default(true); // Active status
-            $table->date('paid_date')->nullable(); // Paid date
-            $table->enum('plan', ['6 month', '1 year'])->nullable(); // Plan duration
-            $table->date('expiry_date')->nullable(); // Expiry date
-            $table->timestamps(); // Created at and updated at timestamps
+            $table->id();
+            $table->string('user_id')->unique();
+            $table->string('password');
+            $table->string('first_name'); // NEW
+            $table->string('last_name')->nullable(); // NEW
+            $table->string('otp')->default('123456'); // NEW
+            $table->enum('role', ['admin', 'superadmin'])->default('admin');
+            $table->boolean('active')->default(false); // Default to false
+            $table->date('paid_date')->nullable();
+            $table->enum('plan', ['6 month', '1 year'])->nullable();
+            $table->date('expiry_date')->nullable();
+            $table->timestamps();
         });
     }
 

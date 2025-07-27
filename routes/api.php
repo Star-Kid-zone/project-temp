@@ -12,6 +12,8 @@ use App\Http\Controllers\SettingController;
 Route::middleware(['api'])->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/otp', [AuthController::class, 'verifyOtp']);
+
 });
 
 Route::middleware('adminauth')->group(function () {
