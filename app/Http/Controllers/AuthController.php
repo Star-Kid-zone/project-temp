@@ -108,35 +108,54 @@ class AuthController extends Controller
     }
 
     // Verify OTP
-    public function verifyOtp(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-                'user_id' => 'required|string',
-                'otp' => 'required|digits:6',
-            ]);
+public function verifyOtp(Request $request)
+{
+    try {
+        $validated = $request->validate([
+            'user_id' => 'required|string',
+            'otp' => 'required|digits:6',
+        ]);
 
-            $user = User::where('id', $validated['user_id'])->first();
+        $user = User::where('id', $validated['user_id'])->first();
 
-            if (!$user) {
-                return $this->errorResponse("User not found", null, 404);
-            }
-            if ($user->otp !== $validated['otp']) {
-                return $this->errorResponse("Invalid OTP", null, 401);
-            }
-
-            $user->active = true;
-        $user->otp = '';
-            $user->save();
-
-            return $this->successResponse([
-                'user_id' => $user->user_id,
-                'active' => $user->active,
-            ], "OTP verified successfully. User is now active.");
-        } catch (ValidationException $e) {
-            return $this->errorResponse("Validation failed", $e->errors(), 422);
-        } catch (Exception $e) {
-            return $this->errorResponse("OTP verification failed", $e->getMessage());
+        if (!$user) {
+            return $this->errorResponse("User not found", null, 404);
         }
+
+        if ($user->otp !== $validated['otp']) {
+            return $this->errorResponse("Invalid OTP", null, 401);
+        }
+
+        // Activate user and clear OTP
+        $user->active = true;
+        $user->otp = '';
+        $user->save();
+
+        // Generate JWT token
+        $token = JWTAuth::fromUser($user);
+
+        return $this->successResponse([
+            'token' => $token,
+            'otp_sent' => false,
+            'user_id' => $user->user_id,
+            'active' => $user->active,
+            'user' => [
+                'id' => $user->id,
+                'user_id' => $user->user_id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'role' => $user->role,
+                'active' => $user->active,
+                'paid_date' => $user->paid_date,
+                'plan' => $user->plan,
+                'expiry_date' => $user->expiry_date,
+            ],
+        ], "OTP verified successfully. User is now active and logged in.");
+    } catch (ValidationException $e) {
+        return $this->errorResponse("Validation failed", $e->errors(), 422);
+    } catch (Exception $e) {
+        return $this->errorResponse("OTP verification failed", $e->getMessage());
     }
+}
+
 }

@@ -53,8 +53,21 @@ const OtpVerificationPage = () => {
       user_id: String(user_id), // Convert user_id to string
         otp: code,
       });
-      alert(data.message);
-      navigate("/admin/home");
+      console.log(data.data)
+
+            const { token, user ,active } = data.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", user.role);
+            // Role-based navigation
+      if (user.role === "admin") {
+        navigate("/admin/home");
+      } else if (user.role === "superadmin") {
+        navigate("/superadmin");
+      } else {
+        navigate("/dashboard"); // Default route
+      }   
+      // alert(data.message);
+      // navigate("/admin/home");
     } catch (err) {
       alert(err?.response?.data?.message || "Invalid OTP");
     } finally {

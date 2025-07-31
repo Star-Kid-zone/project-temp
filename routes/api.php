@@ -8,6 +8,8 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\GooglePlacesController;
+
 
 Route::middleware(['api'])->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
@@ -80,3 +82,4 @@ Route::middleware('adminauth')->group(function () {
 
     Route::get('/settings/user/{id}', [SettingController::class, 'userdetails']); // Get authenticated user's details
     Route::get('/menu/user/{id}', [MenuController::class, 'Listusermenu']); // Get authenticated user's details
+Route::get('/places/search', [GooglePlacesController::class, 'searchPlace']);
